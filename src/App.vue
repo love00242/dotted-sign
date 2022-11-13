@@ -1,7 +1,6 @@
 <template>
   <header>
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
       <h2 class="text-red-500 text-xl">YA</h2>
       <SvgIcon name="test"></SvgIcon>
       <img class="testImg" src="images/test.png" alt="">
