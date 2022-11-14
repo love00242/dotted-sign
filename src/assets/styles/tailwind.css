@@ -6,6 +6,9 @@
   html {
     @apply text-gray-600;
   }
+  input {
+    @apply bg-transparent;
+  }
   small {
     @apply text-xs;
   }
@@ -15,16 +18,20 @@
   .text-gradient-green {
     @apply bg-gradient-green text-transparent bg-clip-text;
   }
+
   .btn {
-    @apply text-lg rounded-2xl;
+    @apply text-lg rounded-2xl cursor-pointer;
   }
+
   .btn-green {
-    @apply bg-gradient-green text-white;
+    @apply bg-gradient-green text-white shadow-[1px_4px_6px_rgba(0,0,0,.11)];
   }
+
   .btn-green:hover {
     @apply bg-yellow-300;
-  }
+  } 
+
   .btn-green-line {
-    @apply border-2 border-green-400 text-green-400 px-7 py-1.5;
+    @apply border border-green-400 text-green-400 px-7 py-1.5 bg-white;
   }
 }

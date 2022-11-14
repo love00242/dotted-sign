@@ -15,9 +15,6 @@ module.exports = {
   rules: {
     "tailwindcss/no-custom-classname": "off",
     "vue/multi-word-component-names": "off",
-    "indent": [
-      "error",
-      2
-    ],
+    "indent": ["error", 2, { "SwitchCase": 1 }]
   },
 };
