@@ -18,8 +18,8 @@ const symbolId = computed(() => { return `#${props.name}` });
 <style scoped>
 .svg-icon {
   @apply
-  w-7
-  h-7
+  w-8
+  h-8
   fill-current
   align-[-10px]
   overflow-hidden

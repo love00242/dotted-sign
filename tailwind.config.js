@@ -8,8 +8,9 @@ module.exports = {
       },
       colors: {
         gray: {
-          300: "#f0f0f0",
+          300: "#f0f0f0", 
           400: "#b7b7b7",
+          500: "#bababa",
           600: "#424242",
         },
         green: {
@@ -19,9 +20,13 @@ module.exports = {
         },
         blue: "#0014C7",
         red: "#CA0000",
+        orange: "#FFB800",
       },
       backgroundImage: {
         "gradient-green": "linear-gradient(180deg, #35A483 0%, #077854 100%)",
+      },
+      boxShadow: {
+        normal: "1px 1px 6px rgba(0, 0, 0, .11)",
       },
     },
   },

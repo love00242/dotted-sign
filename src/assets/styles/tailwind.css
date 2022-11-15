@@ -6,8 +6,8 @@
   html {
     @apply text-gray-600;
   }
-  input {
-    @apply bg-transparent;
+  input, textarea {
+    @apply bg-transparent outline-none resize-none;
   }
   small {
     @apply text-xs;
@@ -24,7 +24,7 @@
   }
 
   .btn-green {
-    @apply bg-gradient-green text-white shadow-[1px_4px_6px_rgba(0,0,0,.11)];
+    @apply bg-gradient-green text-white shadow-normal;
   }
 
   .btn-green:hover {
