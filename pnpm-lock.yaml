@@ -17,6 +17,7 @@ specifiers:
   vite-plugin-svg-icons: ^2.0.1
   vue: ^3.2.41
   vue-router: ^4.1.5
+  vue3-lottie: ^2.4.0
 
 dependencies:
   eslint-plugin-import: 2.26.0_eslint@8.26.0
@@ -26,6 +27,7 @@ dependencies:
   pdfjs-dist: 2.5.207
   vue: 3.2.41
   vue-router: 4.1.6_vue@3.2.41
+  vue3-lottie: 2.4.0_vue@3.2.41
 
 devDependencies:
   '@vitejs/plugin-vue': 3.2.0_vite@3.2.2+vue@3.2.41
@@ -2417,7 +2419,10 @@ packages:
 
   /lodash/4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
-    dev: true
+
+  /lottie-web/5.9.6:
+    resolution: {integrity: sha512-JFs7KsHwflugH5qIXBpB4905yC1Sub2MZWtl/elvO/QC6qj1ApqbUZJyjzJseJUtVpgiDaXQLjBlIJGS7UUUXA==}
+    dev: false
 
   /lru-cache/6.0.0:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
@@ -3731,6 +3736,17 @@ packages:
       '@vue/runtime-dom': 3.2.41
       '@vue/server-renderer': 3.2.41_vue@3.2.41
       '@vue/shared': 3.2.41
+
+  /vue3-lottie/2.4.0_vue@3.2.41:
+    resolution: {integrity: sha512-arNBADu3vW+1Lf+Pw32mU9T6X7c1bMn1tBvJ0/uo+W0G/0UxHyCwoXzyYIKZWB0WoeEvdo5x7HCf8VH0J7rLsw==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      vue: ^3.2
+    dependencies:
+      lodash: 4.17.21
+      lottie-web: 5.9.6
+      vue: 3.2.41
+    dev: false
 
   /w3c-hr-time/1.0.2:
     resolution: {integrity: sha512-z8P5DvDNjKDoFIHK7q8r8lackT6l+jo/Ye3HOle7l9nICP9lf1Ci25fy9vHd0JOWewkIFzXIEig3TdKT7JQ5fQ==}

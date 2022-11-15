@@ -7,14 +7,20 @@ const nowColor = ref("black");
 const canvas = ref(null);
 const drawFlag = ref(false);
 const context = computed(() => canvas.value?.getContext("2d"));
+const demoImgUrl = ref("");
+const uploadTip = ref(null);
 const tabList = ref([
   { name: "手寫簽名", id: 1 },
   { name: "匯入簽名檔", id: 2 },
 ])
-const colorList = ref(["black", "blue", "red"]);
+const colorList = ref([
+  { name: "black", color: "bg-black" },
+  { name: "blue", color: "bg-blue" },
+  { name: "red", color: "bg-red" }
+]);
 
-const changeTab = async(id) => {
-  console.log("changeTab");
+const changeTab = async (id) => {
+  reset();
   nowTab.value = id;
   await nextTick();
   nowTab.value === 1 && setDrawLine();
@@ -38,7 +44,7 @@ const getPaintPosition = (e) => {
     }
   }
 }
-const setDrawLine =() => {
+const setDrawLine = () => {
   context.value.lineWidth = 2;
   context.value.lineCap = "round"; // 繪制圓形的結束線帽
   context.value.lineJoin = "round"; // 兩條線條交匯時，建立圓形邊角
@@ -61,16 +67,20 @@ const finishedDraw = () => {
   context.value.beginPath();
 }
 const reset = () => {
-  context.value.clearRect(0, 0, canvas.value.width, canvas.value.height);
+  context.value?.clearRect(0, 0, canvas.value.width, canvas.value.height);
+  demoImgUrl.value = "";
 }
 const saveSign = () => {
-  const data = canvas.value.toDataURL("image/png"); //圖片儲存的類型選擇png
+  console.log("SAVE");
+  //圖片儲存的類型選擇png
+  const data = nowTab.value === 1 ? canvas.value.toDataURL("image/png") : demoImgUrl.value; 
   localStorage.setItem("sign", data);
 }
 const uploadImg = (e) => {
   const file = e.target.files[0];
-  if(file === undefined) return;
-  console.log("eee", file);
+  if (file === undefined) return;
+  uploadTip.value.style.display = "none";
+  demoImgUrl.value = URL.createObjectURL(file);
 };
 onMounted(() => {
   setDrawLine();
@@ -90,8 +100,8 @@ onMounted(() => {
       </ul>
       <div v-if="nowTab === 1" class="w-full">
         <ul class="flex justify-center mb-7">
-          <li v-for="(val, k) in colorList" :key="k" @click="changeColor(val)"
-            :class="[`w-8 h-8 mx-2.5 rounded-full bg-${val}`, { 'color-active': nowColor === val }]">
+          <li v-for="(val, k) in colorList" :key="k" @click="changeColor(val.name)"
+            :class="['w-8 h-8 mx-2.5 rounded-full', { 'color-active': nowColor === val.name }, val.color]">
           </li>
         </ul>
         <canvas ref="canvas" width="600" height="300" class="m-auto rounded-[26px] bg-white max-w-[600px]"
@@ -99,10 +109,10 @@ onMounted(() => {
         </canvas>
       </div>
       <label v-else
-        class="m-auto rounded-[26px] bg-white w-full max-w-[600px] h-[300px] flex items-center justify-center text-gray-400 text-xl">
-        請選擇檔案
+        class="relative m-auto p-1.5 rounded-[26px] bg-white w-full max-w-[600px] h-[300px] flex items-center justify-center text-gray-400 text-xl">
+        <p ref="uploadTip" class="absolute">請選擇檔案</p>
         <input type="file" class="hidden" @change="uploadImg" accept="image/*" />
-        <img class="demoImg">
+        <img :src="demoImgUrl" class="object-contain max-h-full">
       </label>
       <div class="mt-10 flex w-1/2 max-w-[600px]">
         <button class="btn btn-green-line w-1/2 h-14 mr-2.5 min-w-max" @click="reset">清除</button>
@@ -116,6 +126,7 @@ onMounted(() => {
 li.tab-active {
   @apply text-white bg-gradient-green;
 }
+
 li.color-active {
   @apply shadow-[0px_0px_0px_3px_#f0f0f0,0px_0px_0px_5px_v-bind(nowColor)];
 }
