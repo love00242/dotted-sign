@@ -1,7 +1,13 @@
 <script setup>
 import Header from "@/components/Header.vue";
-const uploadPDF = (e) => {
-  console.log("uploadPDF", e);
+import router from "@/router";
+import { inject } from "vue";
+
+const setPdfFile = inject("setPdfFile");
+const uploadFile = (e) => {
+  router.push({ name: "edit" });
+  const [file] = e.target.files;
+  setPdfFile(file);
 }
 </script>
 
@@ -24,8 +30,8 @@ const uploadPDF = (e) => {
           <img src="images/idx-pdf.png" class="m    b-6">
           <label class="btn btn-green mt-4 px-16 py-4 z-[1]">
             選擇檔案
-            <input type="file" class="hidden" @change="uploadPDF" accept="application/pdf" />
-          </label> 
+            <input type="file" class="hidden" @change="uploadFile" accept="application/pdf" />
+          </label>
           <p class="text-gradient-green text-sm mt-4 z-[1]">(限10MB 內的PDF檔)</p>
         </div>
         <img src="images/idx-people.png" class="absolute right-6 bottom-0 w-full">
@@ -37,4 +43,5 @@ const uploadPDF = (e) => {
 </template>
 
 <style scoped>
+
 </style>

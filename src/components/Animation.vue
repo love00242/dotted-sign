@@ -1,6 +1,6 @@
 <script setup>
 const props = defineProps({
-  animationName: String,
+  animationName: Object,
   text: String,
   width: Number,
 });
