@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const nowSelect = ref("");
 const featureList = ref([
@@ -8,9 +8,10 @@ const featureList = ref([
   { name: "date", title: "日期" },
   { name: "word", title: "插入文字" },
 ]);
-
+const emit = defineEmits(["addCanvas"]);
 const changeSelect = (name) => {
   nowSelect.value = name;
+  emit("addCanvas", nowSelect.value);
 };
 </script>
 
