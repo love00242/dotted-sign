@@ -3,6 +3,7 @@ import Animation from "@/components/Animation.vue";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import SelectSignPopup from "@/components/SelectSignPopup.vue";
+import SignPopup from "@/components/SignPopup.vue";
 import Popup from "@/components/Popup.vue";
 import usePDF from "@/hook/usePDF.js";
 import loading from "@/assets/json/loading.json";
@@ -14,6 +15,7 @@ const isLoading = ref(false);
 const canvasOutDom = ref(null);
 const isShowSelectSignPopup = ref(false);
 const isShowWordPopup = ref(false);
+const isShowSignPopup = ref(false);
 
 const render = async () => {
   isLoading.value = true;
@@ -44,6 +46,17 @@ const addText = (text) => {
   addString(text);
   isShowWordPopup.value = false;
 };
+const addNewSign = () => {
+  isShowSignPopup.value = true;
+};
+const closePopup = (val) => {
+  if(val === "sign") {
+    isShowSignPopup.value = false;
+    return;
+  }
+  isShowSelectSignPopup.value = false;
+  isShowWordPopup.value = false;
+};
 onMounted(() => {
   pdfFile.value && render();
 });
@@ -58,9 +71,10 @@ onMounted(() => {
     </div>
     <Footer :totalPage="totalPage" :nowPage="nowPage" @changePage="changePage" :isRender="isRender"
       @addCanvas="addCanvas" />
-    <SelectSignPopup v-if="isShowSelectSignPopup" />
+    <SelectSignPopup v-if="isShowSelectSignPopup" @closePopup="closePopup" @addNewSign="addNewSign" />
+    <SignPopup v-if="isShowSignPopup" @closePopup="closePopup" />
     <Popup v-if="isShowWordPopup" :isTwoBtn="true" :rightBtnText="'使用'" :isShowInput="true"
-      @comfirm="addText" />
+      @comfirm="addText" @closePopup="closePopup" />
   </div>
 </template>
 

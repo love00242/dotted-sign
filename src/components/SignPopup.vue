@@ -1,6 +1,6 @@
 <script setup>
-import Header from "@/components/Header.vue";
 import { ref, computed, onMounted, nextTick } from "vue";
+const emit = defineEmits(["closePopup", "backToSelectSign"]);
 
 const nowTab = ref(1);
 const nowColor = ref("black");
@@ -9,7 +9,7 @@ const drawFlag = ref(false);
 const context = computed(() => canvas.value?.getContext("2d"));
 const demoImgUrl = ref("");
 const uploadTip = ref(null);
-const tabList = ref([  
+const tabList = ref([
   { name: "手寫簽名", id: 1 },
   { name: "匯入簽名檔", id: 2 },
 ])
@@ -73,8 +73,12 @@ const reset = () => {
 const saveSign = () => {
   console.log("SAVE");
   //圖片儲存的類型選擇png
-  const data = nowTab.value === 1 ? canvas.value.toDataURL("image/png") : demoImgUrl.value; 
-  localStorage.setItem("sign", data);
+  const data = nowTab.value === 1 ? canvas.value.toDataURL("image/png") : demoImgUrl.value;
+  const signList = JSON.parse(localStorage.getItem("sign")) || [];
+  signList.push(data);
+  localStorage.setItem("sign", JSON.stringify(signList));
+  emit("backToSelectSign");
+  closePopup();
 }
 const uploadImg = (e) => {
   const file = e.target.files[0];
@@ -82,40 +86,46 @@ const uploadImg = (e) => {
   uploadTip.value.style.display = "none";
   demoImgUrl.value = URL.createObjectURL(file);
 };
+const closePopup = () => {
+  emit("closePopup", "sign");
+};
 onMounted(() => {
   setDrawLine();
 })
 </script>
 
 <template>
-  <div class="bg-gray-300 h-screen p-5 overflow-y-scroll">
-    <Header />
-    <div class="flex flex-col items-center pt-4">
-      <ul class="flex bg-white rounded-[14px] mb-10">
+  <div class="fixed w-full h-screen z-50 flex justify-center items-center inset-0 bg-gray-500/[47%]"
+    @click.self="closePopup">
+    <div class="rounded-[26px] bg-gray-300 shadow-normal flex flex-col items-center px-3">
+      <ul class="flex bg-white rounded-[14px] mt-6 justify-center w-60">
         <li v-for="val in tabList" :key="val.id"
           :class="['text-green-400 px-6 py-2 rounded-[14px]', { 'tab-active': nowTab === val.id }]"
           @click="changeTab(val.id)">
           {{ val.name }}
         </li>
       </ul>
-      <div v-if="nowTab === 1" class="w-full">
-        <ul class="flex justify-center mb-7">
-          <li v-for="(val, k) in colorList" :key="k" @click="changeColor(val.name)"
-            :class="['w-8 h-8 mx-2.5 rounded-full', { 'color-active': nowColor === val.name }, val.color]">
-          </li>
-        </ul>
-        <canvas ref="canvas" width="600" height="300" class="m-auto rounded-[26px] bg-white max-w-[600px]"
+      <div v-if="nowTab === 1">
+        <div class="flex justify-between my-5">
+          <ul class="flex justify-center">
+            <li v-for="(val, k) in colorList" :key="k" @click="changeColor(val.name)"
+              :class="['w-8 h-8 mx-2.5 rounded-full', { 'color-active': nowColor === val.name }, val.color]">
+            </li>
+          </ul>
+          <button class="text-green-400 text-lg" @click="reset">清除</button>
+        </div>
+        <canvas ref="canvas" width="600" height="208" class="m-auto rounded-[26px] bg-white max-w-[600px]"
           @mousedown="startDraw" @mousemove="drawing" @mouseup="finishedDraw">
         </canvas>
       </div>
       <label v-else
-        class="relative m-auto p-1.5 rounded-[26px] bg-white w-full max-w-[600px] h-[300px] flex items-center justify-center text-gray-400 text-xl">
+        class="relative rounded-[26px] bg-white w-[600px] h-52 mt-5 flex items-center justify-center text-gray-400 text-xl">
         <p ref="uploadTip" class="absolute">請選擇檔案</p>
         <input type="file" class="hidden" @change="uploadImg" accept="image/*" />
         <img :src="demoImgUrl" class="object-contain max-h-full">
       </label>
-      <div class="mt-10 flex w-1/2 max-w-[600px]">
-        <button class="btn btn-green-line w-1/2 h-14 mr-2.5 min-w-max" @click="reset">清除</button>
+      <div class="mt-6 mb-10 flex w-1/2">
+        <button class="btn btn-green-line w-1/2 h-14 mr-2.5 min-w-max" @click="closePopup">取消</button>
         <button class="btn btn-green w-1/2 h-14 ml-2.5 min-w-max" @click="saveSign">建立簽名</button>
       </div>
     </div>
