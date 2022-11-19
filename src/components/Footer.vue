@@ -5,7 +5,7 @@ const props = defineProps({
   totalPage: Number,
   nowPage: Number,
 });
-const emit = defineEmits(["changePage", "addCanvas"]);
+const emit = defineEmits(["changePage", "addCanvas", "download"]);
 console.log(props);
 const addCanvas = (val) => {
   emit("addCanvas", val);
@@ -29,7 +29,7 @@ const addCanvas = (val) => {
       </div>
       <FooterList class="w-[40%]" @addCanvas="addCanvas" />
     </div>
-    <button class="btn btn-green px-14 py-3 absolute right-5">完成簽署</button>
+    <button class="btn btn-green px-14 py-3 absolute right-5" @click="emit('download')">完成簽署</button>
   </footer>
 </template>
 

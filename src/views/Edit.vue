@@ -9,7 +9,7 @@ import usePDF from "@/hook/usePDF.js";
 import loading from "@/assets/json/loading.json";
 import { inject, onMounted, ref } from "vue";
 
-const { uploadPDF, totalPage, nowPage, goCurrentPage, isRender, addString } = usePDF();
+const { uploadPDF, totalPage, nowPage, goCurrentPage, isRender, addString, addSign, download } = usePDF();
 const pdfFile = inject("pdfFile");
 const isLoading = ref(false);
 const canvasOutDom = ref(null);
@@ -27,10 +27,11 @@ const changePage = (type) => {
   canvasOutDom.value.scrollTop = 0;
   goCurrentPage(type);
 };
-const addCanvas = (val) => {
-  switch (val) {
+const addCanvas = (type, val) => {
+  switch (type) {
     case "sign":
-      isShowSelectSignPopup.value = true;
+      isShowSelectSignPopup.value = !isShowSelectSignPopup.value;
+      val && addSign(val);
       break;
     case "check":
       break;
@@ -70,8 +71,8 @@ onMounted(() => {
       <canvas id="canvasBox"></canvas>
     </div>
     <Footer :totalPage="totalPage" :nowPage="nowPage" @changePage="changePage" :isRender="isRender"
-      @addCanvas="addCanvas" />
-    <SelectSignPopup v-if="isShowSelectSignPopup" @closePopup="closePopup" @addNewSign="addNewSign" />
+      @addCanvas="addCanvas" @download="download" />
+    <SelectSignPopup v-if="isShowSelectSignPopup" @closePopup="closePopup" @addNewSign="addNewSign" @addCanvas="addCanvas" />
     <SignPopup v-if="isShowSignPopup" @closePopup="closePopup" />
     <Popup v-if="isShowWordPopup" :isTwoBtn="true" :rightBtnText="'使用'" :isShowInput="true"
       @comfirm="addText" @closePopup="closePopup" />

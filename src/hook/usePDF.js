@@ -13,8 +13,10 @@ export default () => {
 
   const uploadPDF = async (file) => {
     if (!file) return;
+    isRender.value = true;
     await trasferPDF(file);
-    goPageRender();
+    const pdf = await getPagePDF();
+    renderToCanvas(pdf);
   };
   const trasferPDF = async (file) => {
     console.log("trasferPDF", file);
@@ -25,11 +27,12 @@ export default () => {
     // 利用解碼的檔案，載入 PDF 檔及第一頁
     pdfDoc.value = await PDFJS.getDocument({ data }).promise;
     totalPage.value = pdfDoc.value.numPages;
+    console.log("pdfDoc.value", pdfDoc.value);
   }
   const goPageRender = async () => {
-    isRender.value = true;
-    const pdf = await getPagePDF();
-    renderToCanvas(pdf);
+    // isRender.value = true;
+    // const pdf = await getPagePDF();
+    // renderToCanvas(pdf);
   }
   const getPagePDF = async () => {
     console.log("getPage");
@@ -49,9 +52,14 @@ export default () => {
       viewport,
     };
     const renderTask = pdfPageData.render(renderContext);
+    console.log(renderTask, "111");
     // 回傳做好的 PDF canvas
-    return renderTask.promise.then(() => canvas);
+    return renderTask.promise.then(() => {
+      console.log("canvas", "22");
+      return canvas
+    });
   }
+  // 此處 canvas 套用 fabric.js
   const renderToCanvas = async (pdfData) => {
     console.log(pdfData, "renderToCanvas");
     canvas.value.requestRenderAll();
@@ -85,6 +93,7 @@ export default () => {
     });
   }
   const goCurrentPage = (type) => {
+    // recordCanvas();
     type === "previous" ? goPreviousPage() : goNextPage();
     goPageRender();
   };
@@ -96,7 +105,6 @@ export default () => {
     if (nowPage.value + 1 > totalPage.value) return;
     nowPage.value += 1;
   };
-
   //加物件到canvas
   const addString = (str) => {
     console.log("addString", str);
@@ -105,11 +113,11 @@ export default () => {
       top: 120,
     })
     canvas.value.add(text);
+    console.log("getObjects", canvas.value.getObjects());
   }
   const addSign = (sign) => {
-    console.log("putPDF", sign);
-    if (!sign.src) return;
-    fabric.Image.fromURL(sign.src, function (image) {
+    console.log("putPDF");
+    fabric.Image.fromURL(sign, function (image) {
       // 設定簽名出現的位置及大小，後續可調整
       image.top = 400;
       image.scaleX = 0.5;

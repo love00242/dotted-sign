@@ -1,5 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, nextTick } from "vue";
+import { usePdfStore } from "@/store/pdf.js";
+import { storeToRefs } from "pinia";
 const emit = defineEmits(["closePopup", "backToSelectSign"]);
 
 const nowTab = ref(1);
@@ -9,6 +11,8 @@ const drawFlag = ref(false);
 const context = computed(() => canvas.value?.getContext("2d"));
 const demoImgUrl = ref("");
 const uploadTip = ref(null);
+const { signList } = storeToRefs(usePdfStore());
+const PdfStore = usePdfStore();
 const tabList = ref([
   { name: "手寫簽名", id: 1 },
   { name: "匯入簽名檔", id: 2 },
@@ -72,11 +76,11 @@ const reset = () => {
 }
 const saveSign = () => {
   console.log("SAVE");
-  //圖片儲存的類型選擇png
   const data = nowTab.value === 1 ? canvas.value.toDataURL("image/png") : demoImgUrl.value;
-  const signList = JSON.parse(localStorage.getItem("sign")) || [];
-  signList.push(data);
-  localStorage.setItem("sign", JSON.stringify(signList));
+  console.log(data, "saveSign");
+  const list = [...signList.value];
+  list.push(data);
+  PdfStore.setSignList(list);
   emit("backToSelectSign");
   closePopup();
 }
@@ -84,7 +88,12 @@ const uploadImg = (e) => {
   const file = e.target.files[0];
   if (file === undefined) return;
   uploadTip.value.style.display = "none";
-  demoImgUrl.value = URL.createObjectURL(file);
+  const reader = new FileReader();
+  reader.onload = () => {
+    demoImgUrl.value = reader.result;
+  };
+  reader.readAsDataURL(file);
+  // demoImgUrl.value = URL.createObjectURL(file);
 };
 const closePopup = () => {
   emit("closePopup", "sign");
