@@ -3,6 +3,7 @@ const props = defineProps({
   animationName: Object,
   text: String,
   width: Number,
+  isLoop: Boolean,
 });
 console.log(props);
 
@@ -12,7 +13,7 @@ console.log(props);
 
 <template>
   <div class="flex flex-col items-center">
-    <Vue3Lottie :animationData="animationName" :width="width" />
+    <Vue3Lottie :animationData="animationName" :width="width" :loop="isLoop" />
     <p class="text-xl">{{ text }}</p>
   </div>
 </template>

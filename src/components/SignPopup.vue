@@ -11,6 +11,7 @@ const drawFlag = ref(false);
 const context = computed(() => canvas.value?.getContext("2d"));
 const demoImgUrl = ref("");
 const uploadTip = ref(null);
+const isSigned = ref(false);
 const { signList } = storeToRefs(usePdfStore());
 const PdfStore = usePdfStore();
 const tabList = ref([
@@ -68,14 +69,16 @@ const drawing = (e) => {
 }
 const finishedDraw = () => {
   drawFlag.value = false;
+  isSigned.value = true;
   context.value.beginPath();
 }
 const reset = () => {
+  isSigned.value = false;
   context.value?.clearRect(0, 0, canvas.value.width, canvas.value.height);
   demoImgUrl.value = "";
 }
 const saveSign = () => {
-  console.log("SAVE");
+  console.log("SAVE", canvas.value, demoImgUrl.value);
   const data = nowTab.value === 1 ? canvas.value.toDataURL("image/png") : demoImgUrl.value;
   console.log(data, "saveSign");
   const list = [...signList.value];
@@ -90,10 +93,10 @@ const uploadImg = (e) => {
   uploadTip.value.style.display = "none";
   const reader = new FileReader();
   reader.onload = () => {
+    isSigned.value = true;
     demoImgUrl.value = reader.result;
   };
   reader.readAsDataURL(file);
-  // demoImgUrl.value = URL.createObjectURL(file);
 };
 const closePopup = () => {
   emit("closePopup", "sign");
@@ -135,7 +138,7 @@ onMounted(() => {
       </label>
       <div class="mt-6 mb-10 flex w-1/2">
         <button class="btn btn-green-line w-1/2 h-14 mr-2.5 min-w-max" @click="closePopup">取消</button>
-        <button class="btn btn-green w-1/2 h-14 ml-2.5 min-w-max" @click="saveSign">建立簽名</button>
+        <button class="btn btn-green w-1/2 h-14 ml-2.5 min-w-max disabled:opacity-50" :disabled="!isSigned" @click="saveSign">建立簽名</button>
       </div>
     </div>
   </div>

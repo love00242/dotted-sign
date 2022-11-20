@@ -1,12 +1,25 @@
 <script setup>
 import Header from "@/components/Header.vue";
+import Popup from "@/components/Popup.vue";
 import router from "@/router";
-import { inject } from "vue";
+import { inject, ref } from "vue";
 
 const setPdfFile = inject("setPdfFile");
+const tipText = ref("");
+const isShowTipPopup = ref(false);
 const uploadFile = (e) => {
-  router.push({ name: "edit" });
   const [file] = e.target.files;
+  if (file.type.indexOf("pdf") === -1) {
+    tipText.value = "檔案格式錯誤，請重新選擇";
+    isShowTipPopup.value = true;
+    return
+  }
+  if (file.size / (1024 * 1024) > 10) {
+    tipText.value = "檔案超過10MB，請重新選擇";
+    isShowTipPopup.value = true;
+    return
+  }
+  router.push({ name: "edit" });
   setPdfFile(file);
 }
 </script>
@@ -39,6 +52,8 @@ const uploadFile = (e) => {
     </div>
     <img src="images/idx-grass2.png" class="absolute left-0 bottom-0 max-h-80 h-[40%]">
     <small class="absolute right-4 bottom-4 ">小綠簽 © Code: 🍋 / Design: KT</small>
+    <Popup v-if="isShowTipPopup" :isTwoBtn="false" :isShowInput="false" :text="tipText"
+      @closePopup="isShowTipPopup = false" />
   </div>
 </template>
 

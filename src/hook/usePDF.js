@@ -13,7 +13,6 @@ export default () => {
 
   const uploadPDF = async (file) => {
     if (!file) return;
-    isRender.value = true;
     await trasferPDF(file);
     const pdf = await getPagePDF();
     renderToCanvas(pdf);
@@ -30,9 +29,9 @@ export default () => {
     console.log("pdfDoc.value", pdfDoc.value);
   }
   const goPageRender = async () => {
-    // isRender.value = true;
-    // const pdf = await getPagePDF();
-    // renderToCanvas(pdf);
+    isRender.value = true;
+    const pdf = await getPagePDF();
+    renderToCanvas(pdf);
   }
   const getPagePDF = async () => {
     console.log("getPage");
@@ -44,7 +43,7 @@ export default () => {
     const scale = clientHeight / pdfPageData.view[3] * 1.5; // 增加清晰度1.5
     const viewport = pdfPageData.getViewport({ scale });
     // 設定 PDF 所要顯示的寬高及渲染
-    // console.log(pdfPageData.view[3], pdfPageData.view, clientHeight, scale, "height");
+    //console.log(pdfPageData.view[3], pdfPageData.view, clientHeight, scale, "height");
     canvas.height = viewport.height;
     canvas.width = viewport.width;
     const renderContext = {
@@ -52,12 +51,8 @@ export default () => {
       viewport,
     };
     const renderTask = pdfPageData.render(renderContext);
-    console.log(renderTask, "111");
     // 回傳做好的 PDF canvas
-    return renderTask.promise.then(() => {
-      console.log("canvas", "22");
-      return canvas
-    });
+    return renderTask.promise.then(() => canvas);
   }
   // 此處 canvas 套用 fabric.js
   const renderToCanvas = async (pdfData) => {
@@ -93,7 +88,6 @@ export default () => {
     });
   }
   const goCurrentPage = (type) => {
-    // recordCanvas();
     type === "previous" ? goPreviousPage() : goNextPage();
     goPageRender();
   };
@@ -127,7 +121,7 @@ export default () => {
   }
   //下載canvas pdf
   const download = () => {
-    const pdf = new jsPDF();
+    const pdf = new jsPDF("", "pt", "a4");
     //將 canvas 存為圖片
     const image = canvas.value.toDataURL("image/png");
     // 設定背景在 PDF 中的位置及大小
@@ -135,8 +129,7 @@ export default () => {
     const height = pdf.internal.pageSize.height;
     pdf.addImage(image, "png", 0, 0, width, height);
     // 將檔案取名並下載
-    pdf.save("download.pdf");
-    console.log(pdf, width, height, "jsPDF");
+    return pdf.save("download.pdf", {returnPromise:true});
   }
   return {
     uploadPDF,
