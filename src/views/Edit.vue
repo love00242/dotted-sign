@@ -55,7 +55,7 @@ const addNewSign = () => {
 };
 const downloadPDF = () => {
   console.log(canvas.value.getObjects().length);
-  if(!canvas.value.getObjects().length) {
+  if (!canvas.value.getObjects().length) {
     isShowTipPopup.value = true;
     return;
   }

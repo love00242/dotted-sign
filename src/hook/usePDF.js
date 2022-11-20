@@ -1,5 +1,5 @@
 import { fabric } from "fabric";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import jsPDF from "jspdf";
 import * as PDFJS from "pdfjs-dist";
 PDFJS.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS.version}/pdf.worker.js`;
@@ -78,7 +78,6 @@ export default () => {
     })
   }
   const pdfToImage = async (pdfData) => {
-    console.log("pdfToImage", pdfData);
     // 設定 PDF 轉為圖片時的比例
     const scale = 1 / window.devicePixelRatio;
     // 回傳圖片
@@ -129,8 +128,40 @@ export default () => {
     const height = pdf.internal.pageSize.height;
     pdf.addImage(image, "png", 0, 0, width, height);
     // 將檔案取名並下載
-    return pdf.save("download.pdf", {returnPromise:true});
+    return pdf.save("download.pdf", { returnPromise: true });
   }
+  //fabric.js delete button
+  const addCanvasDeleteBtn = () => {
+    fabric.Object.prototype.controls.deleteControl = new fabric.Control({
+      x: -0.5,
+      y: -0.5,
+      offsetY: 0,
+      cursorStyle: 'pointer',
+      mouseUpHandler: deleteObject,
+      render: renderIcon,
+      cornerSize: 24
+    });
+  };
+  const deleteObject = (eventData, transform) => {
+    let target = transform.target;
+    let canvas = target.canvas;
+    canvas.remove(target);
+    canvas.requestRenderAll();
+  }
+
+  const renderIcon = (ctx, left, top, styleOverride, fabricObject) => {
+    let img = new Image();
+    img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAVZJREFUOE9jZIACme4MBwYGxnoGRkYDhv8MAjBxwvT/A/8ZmRY8LZm6EKSWEUTI9GbVM/xjaCCsGa+Khiel0xoZpbsyEhgZmeZTaBhU+z9HRpnuzP0MDIwO1DHw/wFGme6s/9QxDGzKB2obyIDXQHcVPYaddy6heMBSVpXh+OPbOD2F00BtURmGHfGVDH3HtjH0H9sKNqDQyouhyMqbIXnjLIZdty9iNRSvC4usvBgKrbzBhjIw/Acb1n9sG0Mf1AJsJhIMQ5ihIM2EDAMnbEKxDPMmSDGy93EFIl4DYYaBXAbyMsz7sDAlycugGJ4TkI7iTZj33Re1M1x79YT0SMGWRLAlJWSTCYYhqbkIZOB7BgZSiiv8VtCicAAVrEz7SfUaNvX/GRkTIAVsdxaocK2nyNB/DI1Pyqc1gA0EAUhByxhPYtn4gYHh/wUGhv+NT0pnHACZAwADhoojPmcv7QAAAABJRU5ErkJggg==";
+    const size = 24;
+    ctx.save();
+    ctx.translate(left, top);
+    ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+    ctx.drawImage(img, -size / 2, -size / 2, size, size);
+    ctx.restore();
+  }
+  onMounted(() => {
+    addCanvasDeleteBtn();
+  });
   return {
     uploadPDF,
     canvas,

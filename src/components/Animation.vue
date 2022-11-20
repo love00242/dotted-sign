@@ -3,12 +3,13 @@ const props = defineProps({
   animationName: Object,
   text: String,
   width: Number,
-  isLoop: Boolean,
+  isLoop: {
+    type: Boolean,
+    default: true,
+  },
 });
 console.log(props);
 
-//example
-{/* <Animation :animationName="loading" :width="130" :text="'簽名優化'" /> */}
 </script>
 
 <template>
