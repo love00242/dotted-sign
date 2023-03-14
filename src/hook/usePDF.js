@@ -40,7 +40,7 @@ export default () => {
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
     // const clientHeight = document.getElementsByClassName("canvasOut")[0].clientHeight;
-    const scale = 1.5; // 增加清晰度1.5
+    const scale = 3; // 增加清晰度
     const viewport = pdfPageData.getViewport({ scale });
     // 設定 PDF 所要顯示的寬高及渲染
     console.log(pdfPageData.view[3], viewport.height, scale, "height");

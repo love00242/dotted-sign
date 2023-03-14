@@ -101,6 +101,6 @@ onMounted(() => {
 
 <style scoped>
 .canvasOut {
-  @apply flex justify-center h-[calc(100vh-210px)] overflow-y-scroll overflow-x-hidden;
+  @apply flex justify-center h-[calc(100vh-210px)] overflow-y-scroll overflow-x-scroll;
 }
 </style>
