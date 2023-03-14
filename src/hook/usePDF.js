@@ -39,11 +39,11 @@ export default () => {
     // 設定尺寸及產生 canvas
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
-    const clientHeight = document.getElementsByClassName("canvasOut")[0].clientHeight;
-    const scale = clientHeight / pdfPageData.view[3] * 1.5; // 增加清晰度1.5
+    // const clientHeight = document.getElementsByClassName("canvasOut")[0].clientHeight;
+    const scale = 1.5; // 增加清晰度1.5
     const viewport = pdfPageData.getViewport({ scale });
     // 設定 PDF 所要顯示的寬高及渲染
-    //console.log(pdfPageData.view[3], pdfPageData.view, clientHeight, scale, "height");
+    console.log(pdfPageData.view[3], viewport.height, scale, "height");
     canvas.height = viewport.height;
     canvas.width = viewport.width;
     const renderContext = {
@@ -112,7 +112,7 @@ export default () => {
     console.log("putPDF");
     fabric.Image.fromURL(sign, function (image) {
       // 設定簽名出現的位置及大小，後續可調整
-      image.top = 400;
+      image.top = canvas.value.height/2;
       image.scaleX = 0.5;
       image.scaleY = 0.5;
       canvas.value.add(image);

@@ -21,11 +21,11 @@ const addCanvas = (val) => {
           <p>{{ `${nowPage} / ${totalPage}` }}</p>
           <SvgIcon name="vector" class="page rotate-180" @click="emit('changePage', 'nextPage')"></SvgIcon>
         </div>
-        <div class="box">
+        <!-- <div class="box">
           <SvgIcon name="zoomIn"></SvgIcon>
           <p>{{ "100%" }}</p>
           <SvgIcon name="zoomOut"></SvgIcon>
-        </div>
+        </div> -->
       </div>
       <FooterList class="w-[40%]" @addCanvas="addCanvas" />
     </div>
